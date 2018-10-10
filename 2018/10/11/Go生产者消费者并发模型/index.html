@@ -5,15 +5,20 @@
   
 
   
-  <title>Hexo</title>
+  <title>Go生产者消费者并发模型 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="并发和并行并发和并行是不一样的概念 并发 关注的是 程序的设计 层面，并发的程序完全是可以顺序执行的。通过程序设计让多个goroutine切换的使用CPU，让使用者觉得多个goroutine同时进行，某个时刻只有一个正在ing 运行 并行 关注的是 程序的运行 层面，是CPU同时进行多个操作。单核CPU不可能实现真正的并行，只能切换进程让使用者看起来是同时进行。多核CPU同时进行多个工作，这个才能">
+<meta name="keywords" content="Go并发模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go生产者消费者并发模型">
+<meta property="og:url" content="http://yoursite.com/2018/10/11/Go生产者消费者并发模型/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="并发和并行并发和并行是不一样的概念 并发 关注的是 程序的设计 层面，并发的程序完全是可以顺序执行的。通过程序设计让多个goroutine切换的使用CPU，让使用者觉得多个goroutine同时进行，某个时刻只有一个正在ing 运行 并行 关注的是 程序的运行 层面，是CPU同时进行多个操作。单核CPU不可能实现真正的并行，只能切换进程让使用者看起来是同时进行。多核CPU同时进行多个工作，这个才能">
 <meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-10-10T17:08:56.761Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="Go生产者消费者并发模型">
+<meta name="twitter:description" content="并发和并行并发和并行是不一样的概念 并发 关注的是 程序的设计 层面，并发的程序完全是可以顺序执行的。通过程序设计让多个goroutine切换的使用CPU，让使用者觉得多个goroutine同时进行，某个时刻只有一个正在ing 运行 并行 关注的是 程序的运行 层面，是CPU同时进行多个操作。单核CPU不可能实现真正的并行，只能切换进程让使用者看起来是同时进行。多核CPU同时进行多个工作，这个才能">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -60,9 +65,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-Go生产者消费者并发模型" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-Go生产者消费者并发模型" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2018/10/11/Go生产者消费者并发模型/" class="article-date">
   <time datetime="2018-10-10T16:10:15.000Z" itemprop="datePublished">2018-10-11</time>
@@ -75,8 +78,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/10/11/Go生产者消费者并发模型/">Go生产者消费者并发模型</a>
+    <h1 class="article-title" itemprop="name">
+      Go生产者消费者并发模型
     </h1>
   
 
@@ -111,133 +114,19 @@
     </footer>
   </div>
   
-</article>
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-2017年9月" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/09/30/2017年9月/" class="article-date">
-  <time datetime="2018-09-30T06:05:08.000Z" itemprop="datePublished">2018-09-30</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/09/30/2017年9月/">2017年9月</a>
-    </h1>
+    <a href="/2018/09/30/2017年9月/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">2017年9月</div>
+    </a>
   
+</nav>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/30/2017年9月/" data-id="cjn3ev5x60001cy0emsvgozfy" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
   
 </article>
-
-
-  
-    <article id="post-reading" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/09/30/reading/" class="article-date">
-  <time datetime="2018-09-30T03:14:49.000Z" itemprop="datePublished">2018-09-30</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/09/30/reading/">reading</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="《图解TCP-IP》"><a href="#《图解TCP-IP》" class="headerlink" title="《图解TCP IP》"></a>《图解TCP IP》</h3><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">作者用通俗易懂的文字以及图介绍了TCP IP协议</span><br></pre></td></tr></table></figure>
-<p>More info：<a href="https://github.com/gongyao1992/mygo2/wiki" target="_blank" rel="noopener">viki</a></p>
-<h3 id="《GoWeb编程》"><a href="#《GoWeb编程》" class="headerlink" title="《GoWeb编程》"></a>《GoWeb编程》</h3><p>More info: <a href="https://gongyao1992.github.io/go/" target="_blank" rel="noopener">go笔记</a></p>
-<h3 id="《Go语言实战》"><a href="#《Go语言实战》" class="headerlink" title="《Go语言实战》"></a>《Go语言实战》</h3><h3 id="《》"><a href="#《》" class="headerlink" title="《》"></a>《》</h3>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/30/reading/" data-id="cjn3ev5xe0005cy0edvja4ri7" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/读书笔记/">读书笔记</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/09/30/hello-world/" class="article-date">
-  <time datetime="2018-09-30T02:59:49.892Z" itemprop="datePublished">2018-09-30</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/09/30/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/09/30/hello-world/" data-id="cjn3ev5xa0003cy0egxunkf6w" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-
 
 </section>
         
