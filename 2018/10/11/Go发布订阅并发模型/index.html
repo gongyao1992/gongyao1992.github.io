@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Go并发模式," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Go并发模型昨天整理了Go生产者消费者并发模型，今天整理了 发布订阅 模型。Go的并发根本就是 同时运行多个goroutine跑任务，任务之间使用channel进行信息交流。 生产者消费者 生产者跑一个go程，消费者跑一个go程，连接生产者和消费者的就是信道channel。 发布者订阅者 信息发布者有多个订阅者，每个订阅者一个信道，发布者每次发布消息往所有的订阅者信道里面塞消息，然后订阅者进行读取">
+<meta name="keywords" content="Go并发模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go发布订阅并发模型">
+<meta property="og:url" content="http://yoursite.com/2018/10/11/Go发布订阅并发模型/index.html">
+<meta property="og:site_name" content="Ordinary Road">
+<meta property="og:description" content="Go并发模型昨天整理了Go生产者消费者并发模型，今天整理了 发布订阅 模型。Go的并发根本就是 同时运行多个goroutine跑任务，任务之间使用channel进行信息交流。 生产者消费者 生产者跑一个go程，消费者跑一个go程，连接生产者和消费者的就是信道channel。 发布者订阅者 信息发布者有多个订阅者，每个订阅者一个信道，发布者每次发布消息往所有的订阅者信道里面塞消息，然后订阅者进行读取">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-10-11T17:57:43.680Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Go发布订阅并发模型">
+<meta name="twitter:description" content="Go并发模型昨天整理了Go生产者消费者并发模型，今天整理了 发布订阅 模型。Go的并发根本就是 同时运行多个goroutine跑任务，任务之间使用channel进行信息交流。 生产者消费者 生产者跑一个go程，消费者跑一个go程，连接生产者和消费者的就是信道channel。 发布者订阅者 信息发布者有多个订阅者，每个订阅者一个信道，发布者每次发布消息往所有的订阅者信道里面塞消息，然后订阅者进行读取">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/10/11/Go发布订阅并发模型/"/>
+
+
+
+
+
+  <title>Go发布订阅并发模型 | Ordinary Road</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ordinary Road</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/11/Go发布订阅并发模型/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="GongYao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/touxiang.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ordinary Road">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Go发布订阅并发模型</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-11T22:35:45+08:00">
+                2018-10-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Go并发模型"><a href="#Go并发模型" class="headerlink" title="Go并发模型"></a>Go并发模型</h2><p>昨天整理了<a href="https://gongyao1992.github.io/2018/10/11/Go%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/" target="_blank" rel="noopener">Go生产者消费者并发模型</a>，今天整理了 <code>发布订阅</code> 模型。Go的并发根本就是 同时运行多个goroutine跑任务，任务之间使用channel进行信息交流。</p>
+<p><strong>生产者消费者</strong> 生产者跑一个go程，消费者跑一个go程，连接生产者和消费者的就是信道channel。</p>
+<p><strong>发布者订阅者</strong> 信息发布者有多个订阅者，每个订阅者一个信道，发布者每次发布消息往所有的订阅者信道里面塞消息，然后订阅者进行读取。</p>
+<p>主要是 channel信道 扮演的角色不同，就形成了不同的模式</p>
+<h2 id="发布订阅并发模型"><a href="#发布订阅并发模型" class="headerlink" title="发布订阅并发模型"></a>发布订阅并发模型</h2><h3 id="概念理解"><a href="#概念理解" class="headerlink" title="概念理解"></a>概念理解</h3><p>发布者发布一个消息，所有订阅者收到消息</p>
+<h3 id="发布者需要做什么"><a href="#发布者需要做什么" class="headerlink" title="发布者需要做什么"></a>发布者需要做什么</h3><ol>
+<li>发送消息</li>
+<li>关闭发送</li>
+</ol>
+<h3 id="订阅者需要做什么？"><a href="#订阅者需要做什么？" class="headerlink" title="订阅者需要做什么？"></a>订阅者需要做什么？</h3><ol>
+<li>和发布者建立订阅关系</li>
+<li>取消和发布者建立的订阅关系</li>
+</ol>
+<h2 id="Go实现"><a href="#Go实现" class="headerlink" title="Go实现"></a>Go实现</h2><p>定义订阅者以及过滤器<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> (</span><br><span class="line">	subscriber <span class="keyword">chan</span> <span class="keyword">interface</span>&#123;&#125; <span class="comment">//订阅者 信道</span></span><br><span class="line">	filter <span class="function"><span class="keyword">func</span><span class="params">(v <span class="keyword">interface</span>&#123;&#125;)</span> <span class="title">bool</span> //过滤器</span></span><br><span class="line"><span class="function">)</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>将信道抽象为订阅者，信道不再是多个go程之间传输数据的媒介，而是变成了接受数据的主角<br>Go通过 <code>interface{}</code> 实现 <code>弱类型</code>，虽然Go里面没有，但是这样理解一下</p>
+</blockquote>
+<p>发布者 及 发布者功能<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//信息发布者</span></span><br><span class="line"><span class="keyword">type</span> Publisher <span class="keyword">struct</span> &#123;</span><br><span class="line">	m				sync.RWMutex <span class="comment">//读写锁</span></span><br><span class="line">	buffer 			<span class="keyword">int</span> <span class="comment">//一个订阅者的缓存信息数量</span></span><br><span class="line">	timeout 		time.Duration <span class="comment">//信息的延迟时间</span></span><br><span class="line">	subscribers 	<span class="keyword">map</span>[subscriber]filter <span class="comment">//订阅者</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//获取一个信息发布者</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewPublisher</span><span class="params">(duration time.Duration, int2 <span class="keyword">int</span>)</span> *<span class="title">Publisher</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> &amp;Publisher&#123;</span><br><span class="line">		buffer:int2,</span><br><span class="line">		timeout:duration,</span><br><span class="line">		subscribers:<span class="built_in">make</span>(<span class="keyword">map</span>[subscriber]filter), <span class="comment">//映射初始化</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 信息发布者关闭</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p *Publisher)</span> <span class="title">Close</span><span class="params">()</span></span>  &#123;</span><br><span class="line">	p.m.Lock()</span><br><span class="line">	<span class="keyword">defer</span> p.m.Unlock()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> sub,_ := <span class="keyword">range</span> p.subscribers &#123;</span><br><span class="line">		<span class="built_in">delete</span>(p.subscribers, sub)</span><br><span class="line">		<span class="built_in">close</span>(sub)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 给所有的人发布信息</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p *Publisher)</span> <span class="title">PublishAll</span><span class="params">(info <span class="keyword">interface</span>&#123;&#125;)</span></span>  &#123;</span><br><span class="line">	p.m.RLock()</span><br><span class="line">	<span class="keyword">defer</span> p.m.RUnlock()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> wg sync.WaitGroup <span class="comment">//此时，channel只是一个接收数据的东西</span></span><br><span class="line">	<span class="keyword">for</span> sub, filt := <span class="keyword">range</span> p.subscribers &#123;</span><br><span class="line">		wg.Add(<span class="number">1</span>)</span><br><span class="line">		<span class="keyword">go</span> p.PublishOne(sub, filt, info, &amp;wg)<span class="comment">//给一个人发放信息</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	wg.Wait()</span><br><span class="line">	<span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 给一个人发布信息</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p *Publisher)</span> <span class="title">PublishOne</span><span class="params">(sub subscriber, filt filter, info <span class="keyword">interface</span>&#123;&#125;, wg *sync.WaitGroup)</span></span>  &#123;</span><br><span class="line">	<span class="keyword">defer</span> wg.Done()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> filt != <span class="literal">nil</span> &amp;&amp; !filt(info) &#123;</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">select</span> &#123;</span><br><span class="line">	<span class="keyword">case</span> sub&lt;-info:</span><br><span class="line">	<span class="keyword">case</span> &lt;-time.After(p.timeout):</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><code>sync.RWMutex</code> 读写锁需要了解一下 Lock() 和 RLock() 的区别。</p>
+</blockquote>
+<blockquote>
+<p>此时，channel的作用已经不再是 阻塞 以及等待goroutine执行完成，而是数据的接受者。goroutine的执行用<code>sync.WaitGroup</code>来管理</p>
+</blockquote>
+<p>订阅者订阅和取消订阅<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//获取信息订阅者</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p *Publisher)</span> <span class="title">GetSubscriber</span><span class="params">(filter2 filter)</span> <span class="title">chan</span> <span class="title">interface</span></span>&#123;&#125; &#123;</span><br><span class="line">	p.m.Lock()</span><br><span class="line">	<span class="keyword">defer</span> p.m.Unlock()</span><br><span class="line"></span><br><span class="line">	ch := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">interface</span>&#123;&#125;, p.buffer)</span><br><span class="line">	p.subscribers[ch] = filter2</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> ch</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//删除一个信息订阅者</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p *Publisher)</span> <span class="title">DelSubscriber</span><span class="params">(sub subscriber)</span></span>  &#123;</span><br><span class="line">	p.m.Lock()</span><br><span class="line">	<span class="keyword">defer</span> p.m.Unlock()</span><br><span class="line"></span><br><span class="line">	<span class="built_in">delete</span>(p.subscribers, sub)</span><br><span class="line">	<span class="built_in">close</span>(sub)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>main方法<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>  &#123;</span><br><span class="line">	<span class="comment">//获取信息发布者</span></span><br><span class="line">	p := NewPublisher(<span class="number">100</span> * time.Microsecond, <span class="number">32</span>)</span><br><span class="line">	<span class="keyword">defer</span> p.Close()</span><br><span class="line"></span><br><span class="line">	<span class="comment">//获取订阅者1</span></span><br><span class="line">	sub1 := p.GetSubscriber(<span class="literal">nil</span>)</span><br><span class="line">	<span class="comment">//获取订阅者2</span></span><br><span class="line">	sub2 := p.GetSubscriber(<span class="function"><span class="keyword">func</span><span class="params">(v <span class="keyword">interface</span>&#123;&#125;)</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">		<span class="keyword">if</span> str, ok := v.(<span class="keyword">string</span>); ok &#123;</span><br><span class="line">			<span class="keyword">return</span> strings.Contains(str, <span class="string">"gongyao"</span>)</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">	&#125;)</span><br><span class="line"></span><br><span class="line">	<span class="comment">//发布信息</span></span><br><span class="line">	p.PublishAll(<span class="string">"Hello gongyao"</span>)</span><br><span class="line">	p.PublishAll(<span class="string">"Hello wanghui"</span>)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123; <span class="comment">//读取 订阅者1受到的消息</span></span><br><span class="line">		<span class="keyword">for</span> sub1_msg := <span class="keyword">range</span> sub1 &#123;</span><br><span class="line">			fmt.Println(<span class="string">"Sub1 : "</span>, sub1_msg)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123; <span class="comment">//读取 订阅者2受到的消息</span></span><br><span class="line">		<span class="keyword">for</span> sub2_msg := <span class="keyword">range</span> sub2 &#123;</span><br><span class="line">			fmt.Println(<span class="string">"Sub2 : "</span>, sub2_msg)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line"></span><br><span class="line">	time.Sleep(<span class="number">1</span> * time.Second)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>上面的例子中，有两个订阅者分别订阅了全部主题和含有”gongyao”的主题：</p>
+</blockquote>
+<p>执行结果<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Sub1 :  Hello gongyao</span><br><span class="line">Sub1 :  Hello wanghui</span><br><span class="line">Sub2 :  Hello gongyao</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Go并发模式/" rel="tag"># Go并发模式</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/11/Go生产者消费者并发模型/" rel="next" title="Go生产者消费者并发模型">
+                <i class="fa fa-chevron-left"></i> Go生产者消费者并发模型
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/touxiang.JPG"
+                alt="GongYao" />
+            
+              <p class="site-author-name" itemprop="name">GongYao</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/gongyao1992" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:gongyao1992@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Go并发模型"><span class="nav-number">1.</span> <span class="nav-text">Go并发模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#发布订阅并发模型"><span class="nav-number">2.</span> <span class="nav-text">发布订阅并发模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#概念理解"><span class="nav-number">2.1.</span> <span class="nav-text">概念理解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#发布者需要做什么"><span class="nav-number">2.2.</span> <span class="nav-text">发布者需要做什么</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#订阅者需要做什么？"><span class="nav-number">2.3.</span> <span class="nav-text">订阅者需要做什么？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Go实现"><span class="nav-number">3.</span> <span class="nav-text">Go实现</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">GongYao</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
