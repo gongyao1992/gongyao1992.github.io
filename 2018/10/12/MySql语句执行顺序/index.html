@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="读书笔记," />
+  <meta name="keywords" content="MySql," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="《图解TCP IP》1作者用通俗易懂的文字以及图介绍了TCP IP协议 More info：viki 《GoWeb编程》More info: go笔记 《Go语言实战》《》">
-<meta name="keywords" content="读书笔记">
+<meta name="description" content="Sql查询语句在项目开发过程中，用Sql语句查询数据库的时候有时候查询不到自己想要的结果，特别是 GROUP BY 和 LIMIT，如果不知道Sql的执行顺序这两个容易搞混 样本Sql语句1234567SELECT `d`.`id`, `d`.`name`, `u`.`mobile`, `d`.`driver_type_id`FROM (`driver` AS `d` LEFT JOIN `use">
+<meta name="keywords" content="MySql">
 <meta property="og:type" content="article">
-<meta property="og:title" content="reading">
-<meta property="og:url" content="http://yoursite.com/2018/09/30/reading/index.html">
+<meta property="og:title" content="MySql语句执行顺序">
+<meta property="og:url" content="http://yoursite.com/2018/10/12/MySql语句执行顺序/index.html">
 <meta property="og:site_name" content="Ordinary Road">
-<meta property="og:description" content="《图解TCP IP》1作者用通俗易懂的文字以及图介绍了TCP IP协议 More info：viki 《GoWeb编程》More info: go笔记 《Go语言实战》《》">
+<meta property="og:description" content="Sql查询语句在项目开发过程中，用Sql语句查询数据库的时候有时候查询不到自己想要的结果，特别是 GROUP BY 和 LIMIT，如果不知道Sql的执行顺序这两个容易搞混 样本Sql语句1234567SELECT `d`.`id`, `d`.`name`, `u`.`mobile`, `d`.`driver_type_id`FROM (`driver` AS `d` LEFT JOIN `use">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-09-30T06:09:25.174Z">
+<meta property="og:updated_time" content="2018-10-12T02:41:27.908Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="reading">
-<meta name="twitter:description" content="《图解TCP IP》1作者用通俗易懂的文字以及图介绍了TCP IP协议 More info：viki 《GoWeb编程》More info: go笔记 《Go语言实战》《》">
+<meta name="twitter:title" content="MySql语句执行顺序">
+<meta name="twitter:description" content="Sql查询语句在项目开发过程中，用Sql语句查询数据库的时候有时候查询不到自己想要的结果，特别是 GROUP BY 和 LIMIT，如果不知道Sql的执行顺序这两个容易搞混 样本Sql语句1234567SELECT `d`.`id`, `d`.`name`, `u`.`mobile`, `d`.`driver_type_id`FROM (`driver` AS `d` LEFT JOIN `use">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/09/30/reading/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/10/12/MySql语句执行顺序/"/>
 
 
 
 
 
-  <title>reading | Ordinary Road</title>
+  <title>MySql语句执行顺序 | Ordinary Road</title>
   
 
 
@@ -243,7 +243,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/30/reading/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/12/MySql语句执行顺序/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="GongYao">
@@ -260,7 +260,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">reading</h1>
+          <h1 class="post-title" itemprop="name headline">MySql语句执行顺序</h1>
         
 
         <div class="post-meta">
@@ -272,8 +272,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-30T11:14:49+08:00">
-                2018-09-30
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-12T10:02:08+08:00">
+                2018-10-12
               </time>
             
 
@@ -310,10 +310,18 @@
       
 
       
-        <h3 id="《图解TCP-IP》"><a href="#《图解TCP-IP》" class="headerlink" title="《图解TCP IP》"></a>《图解TCP IP》</h3><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">作者用通俗易懂的文字以及图介绍了TCP IP协议</span><br></pre></td></tr></table></figure>
-<p>More info：<a href="https://github.com/gongyao1992/mygo2/wiki" target="_blank" rel="noopener">viki</a></p>
-<h3 id="《GoWeb编程》"><a href="#《GoWeb编程》" class="headerlink" title="《GoWeb编程》"></a>《GoWeb编程》</h3><p>More info: <a href="https://gongyao1992.github.io/go/" target="_blank" rel="noopener">go笔记</a></p>
-<h3 id="《Go语言实战》"><a href="#《Go语言实战》" class="headerlink" title="《Go语言实战》"></a>《Go语言实战》</h3><h3 id="《》"><a href="#《》" class="headerlink" title="《》"></a>《》</h3>
+        <h2 id="Sql查询语句"><a href="#Sql查询语句" class="headerlink" title="Sql查询语句"></a>Sql查询语句</h2><p>在项目开发过程中，用<code>Sql</code>语句查询数据库的时候有时候查询不到自己想要的结果，特别是 <code>GROUP BY</code> 和 <code>LIMIT</code>，如果不知道Sql的执行顺序这两个容易搞混</p>
+<p>样本Sql语句<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="string">`d`</span>.<span class="string">`id`</span>, <span class="string">`d`</span>.<span class="string">`name`</span>, <span class="string">`u`</span>.<span class="string">`mobile`</span>, <span class="string">`d`</span>.<span class="string">`driver_type_id`</span></span><br><span class="line"><span class="keyword">FROM</span> (<span class="string">`driver`</span> <span class="keyword">AS</span> <span class="string">`d`</span> <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> <span class="string">`user`</span> <span class="keyword">AS</span> <span class="string">`u`</span> <span class="keyword">ON</span> <span class="string">`u`</span>.<span class="string">`id`</span> = <span class="string">`d`</span>.<span class="string">`user_id`</span>)</span><br><span class="line"><span class="keyword">WHERE</span> <span class="string">`d`</span>.<span class="string">`id`</span> &lt; <span class="number">1055</span></span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> <span class="string">`d`</span>.<span class="string">`driver_type_id`</span></span><br><span class="line"><span class="keyword">HAVING</span> <span class="string">`d`</span>.<span class="string">`name`</span> = <span class="string">'李起伟'</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> <span class="string">`d`</span>.<span class="string">`id`</span> <span class="keyword">DESC</span></span><br><span class="line"><span class="keyword">LIMIT</span> <span class="number">2</span></span><br></pre></td></tr></table></figure></p>
+<p>我们来具体分析一下查询处理的每一阶段</p>
+<ol>
+<li><strong>FROM</strong> : 对FROM左边表和右边表计算笛卡尔积。产生虚拟表 t1</li>
+<li><strong>ON</strong> : 对虚拟表 t1 进行ON筛选，只有符合条件 <join-condition> 的才会记录在虚拟表 t2 中</join-condition></li>
+<li><strong>JOIN</strong> : 如果使用的是 OUTER JOIN，那么保留表中未匹配的行就会作为外部行添加到虚拟表 t2 中形成 虚拟表t3。如果还有 其他表 继续 1 2 3步骤</li>
+<li><strong>WHERE</strong> : 对虚拟表t3进行 <where-condition> 过滤，符合条件的插入到虚拟表 t4 中</where-condition></li>
+<li><strong>GROUP BY</strong> : 根据 <code>GROUP BY</code> 子句中的列，对虚拟表 t4 中的记录进行分组操作，形成虚拟表 t5</li>
+<li></li>
+</ol>
+
       
     </div>
     
@@ -330,7 +338,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/读书笔记/" rel="tag"># 读书笔记</a>
+            <a href="/tags/MySql/" rel="tag"># MySql</a>
           
         </div>
       
@@ -343,8 +351,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/09/30/hello-world/" rel="next" title="Hello World">
-                <i class="fa fa-chevron-left"></i> Hello World
+              <a href="/2018/10/11/Go发布订阅并发模型/" rel="next" title="Go发布订阅并发模型">
+                <i class="fa fa-chevron-left"></i> Go发布订阅并发模型
               </a>
             
           </div>
@@ -352,10 +360,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/09/30/2017年9月/" rel="prev" title="2017年9月">
-                2017年9月 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -498,7 +502,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#《图解TCP-IP》"><span class="nav-number">1.</span> <span class="nav-text">《图解TCP IP》</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#《GoWeb编程》"><span class="nav-number">2.</span> <span class="nav-text">《GoWeb编程》</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#《Go语言实战》"><span class="nav-number">3.</span> <span class="nav-text">《Go语言实战》</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#《》"><span class="nav-number">4.</span> <span class="nav-text">《》</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Sql查询语句"><span class="nav-number">1.</span> <span class="nav-text">Sql查询语句</span></a></li></ol></div>
             
 
           </div>
