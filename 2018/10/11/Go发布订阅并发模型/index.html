@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Ordinary Road">
 <meta property="og:description" content="Go并发模型昨天整理了Go生产者消费者并发模型，今天整理了 发布订阅 模型。Go的并发根本就是 同时运行多个goroutine跑任务，任务之间使用channel进行信息交流。 生产者消费者 生产者跑一个go程，消费者跑一个go程，连接生产者和消费者的就是信道channel。 发布者订阅者 信息发布者有多个订阅者，每个订阅者一个信道，发布者每次发布消息往所有的订阅者信道里面塞消息，然后订阅者进行读取">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-10-11T17:57:43.680Z">
+<meta property="og:updated_time" content="2018-10-12T01:51:44.184Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Go发布订阅并发模型">
 <meta name="twitter:description" content="Go并发模型昨天整理了Go生产者消费者并发模型，今天整理了 发布订阅 模型。Go的并发根本就是 同时运行多个goroutine跑任务，任务之间使用channel进行信息交流。 生产者消费者 生产者跑一个go程，消费者跑一个go程，连接生产者和消费者的就是信道channel。 发布者订阅者 信息发布者有多个订阅者，每个订阅者一个信道，发布者每次发布消息往所有的订阅者信道里面塞消息，然后订阅者进行读取">
@@ -313,8 +313,13 @@
         <h2 id="Go并发模型"><a href="#Go并发模型" class="headerlink" title="Go并发模型"></a>Go并发模型</h2><p>昨天整理了<a href="https://gongyao1992.github.io/2018/10/11/Go%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E5%B9%B6%E5%8F%91%E6%A8%A1%E5%9E%8B/" target="_blank" rel="noopener">Go生产者消费者并发模型</a>，今天整理了 <code>发布订阅</code> 模型。Go的并发根本就是 同时运行多个goroutine跑任务，任务之间使用channel进行信息交流。</p>
 <p><strong>生产者消费者</strong> 生产者跑一个go程，消费者跑一个go程，连接生产者和消费者的就是信道channel。</p>
 <p><strong>发布者订阅者</strong> 信息发布者有多个订阅者，每个订阅者一个信道，发布者每次发布消息往所有的订阅者信道里面塞消息，然后订阅者进行读取。</p>
-<p>主要是 channel信道 扮演的角色不同，就形成了不同的模式</p>
-<h2 id="发布订阅并发模型"><a href="#发布订阅并发模型" class="headerlink" title="发布订阅并发模型"></a>发布订阅并发模型</h2><h3 id="概念理解"><a href="#概念理解" class="headerlink" title="概念理解"></a>概念理解</h3><p>发布者发布一个消息，所有订阅者收到消息</p>
+<p>主要是 channel信道 扮演的角色不同，就形成了不同的模式。</p>
+<p>Go语言并发哲学口号</p>
+<blockquote>
+<p>Do not communicate by sharing memory; instead, share memory by communicating.</p>
+<p>不要通过共享内存来通信，而应通过通信来共享内存。</p>
+</blockquote>
+<h2 id="发布订阅并发模型"><a href="#发布订阅并发模型" class="headerlink" title="发布订阅并发模型"></a>发布订阅并发模型</h2><h3 id="概念理解"><a href="#概念理解" class="headerlink" title="概念理解"></a>概念理解</h3><p>发布者发布一个消息，所有订阅者收到消息，发布者不用关心订阅者到底收到消息没有。</p>
 <h3 id="发布者需要做什么"><a href="#发布者需要做什么" class="headerlink" title="发布者需要做什么"></a>发布者需要做什么</h3><ol>
 <li>发送消息</li>
 <li>关闭发送</li>
