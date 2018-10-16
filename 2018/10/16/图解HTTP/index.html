@@ -79,13 +79,13 @@
 
 
 
-<meta name="description" content="前言在开发的过程中，常常用到HTTP请求。很少去全面的了解它，今天读了《图解HTTP》这本书，简单就着目录梳理一下 了解Web及网络基础使用HTTP协议访问Web在浏览器地址栏输入url，Web浏览器从Web服务器端获取文件资源等信息，从而显示在Web页面。在这个过程中，Web使用一种名为HTTP协议作为规范，完成从客户端到服务端的一系列流程。  在访问Web的过程中，像浏览器这样通过发送请求获取">
+<meta name="description" content="前言在开发的过程中，常常用到HTTP请求。很少去全面的了解它，今天读了《图解HTTP》这本书，简单就着目录梳理一下  了解Web及网络基础使用HTTP协议访问Web在浏览器地址栏输入url，Web浏览器从Web服务器端获取文件资源等信息，从而显示在Web页面。在这个过程中，Web使用一种名为HTTP协议作为规范，完成从客户端到服务端的一系列流程。  在访问Web的过程中，像浏览器这样通过发送请求获">
 <meta name="keywords" content="HTTP协议">
 <meta property="og:type" content="article">
 <meta property="og:title" content="图解HTTP">
 <meta property="og:url" content="http://yoursite.com/2018/10/16/图解HTTP/index.html">
 <meta property="og:site_name" content="Ordinary Road">
-<meta property="og:description" content="前言在开发的过程中，常常用到HTTP请求。很少去全面的了解它，今天读了《图解HTTP》这本书，简单就着目录梳理一下 了解Web及网络基础使用HTTP协议访问Web在浏览器地址栏输入url，Web浏览器从Web服务器端获取文件资源等信息，从而显示在Web页面。在这个过程中，Web使用一种名为HTTP协议作为规范，完成从客户端到服务端的一系列流程。  在访问Web的过程中，像浏览器这样通过发送请求获取">
+<meta property="og:description" content="前言在开发的过程中，常常用到HTTP请求。很少去全面的了解它，今天读了《图解HTTP》这本书，简单就着目录梳理一下  了解Web及网络基础使用HTTP协议访问Web在浏览器地址栏输入url，Web浏览器从Web服务器端获取文件资源等信息，从而显示在Web页面。在这个过程中，Web使用一种名为HTTP协议作为规范，完成从客户端到服务端的一系列流程。  在访问Web的过程中，像浏览器这样通过发送请求获">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2018/10/16/图解HTTP/通信传输流.jpeg">
 <meta property="og:image" content="http://yoursite.com/2018/10/16/图解HTTP/通信传输流2.jpeg">
@@ -94,10 +94,10 @@
 <meta property="og:image" content="http://yoursite.com/2018/10/16/图解HTTP/DNS服务.jpeg">
 <meta property="og:image" content="http://yoursite.com/2018/10/16/图解HTTP/协议之间相互配合.jpeg">
 <meta property="og:image" content="http://yoursite.com/2018/10/16/图解HTTP/绝对URI格式.jpeg%20(774%20*%20150">
-<meta property="og:updated_time" content="2018-10-16T17:45:20.380Z">
+<meta property="og:updated_time" content="2018-10-16T17:49:24.676Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="图解HTTP">
-<meta name="twitter:description" content="前言在开发的过程中，常常用到HTTP请求。很少去全面的了解它，今天读了《图解HTTP》这本书，简单就着目录梳理一下 了解Web及网络基础使用HTTP协议访问Web在浏览器地址栏输入url，Web浏览器从Web服务器端获取文件资源等信息，从而显示在Web页面。在这个过程中，Web使用一种名为HTTP协议作为规范，完成从客户端到服务端的一系列流程。  在访问Web的过程中，像浏览器这样通过发送请求获取">
+<meta name="twitter:description" content="前言在开发的过程中，常常用到HTTP请求。很少去全面的了解它，今天读了《图解HTTP》这本书，简单就着目录梳理一下  了解Web及网络基础使用HTTP协议访问Web在浏览器地址栏输入url，Web浏览器从Web服务器端获取文件资源等信息，从而显示在Web页面。在这个过程中，Web使用一种名为HTTP协议作为规范，完成从客户端到服务端的一系列流程。  在访问Web的过程中，像浏览器这样通过发送请求获">
 <meta name="twitter:image" content="http://yoursite.com/2018/10/16/图解HTTP/通信传输流.jpeg">
 
 
@@ -351,6 +351,7 @@
 
       
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在开发的过程中，常常用到HTTP请求。很少去全面的了解它，今天读了《图解HTTP》这本书，简单就着目录梳理一下</p>
+<hr>
 <h2 id="了解Web及网络基础"><a href="#了解Web及网络基础" class="headerlink" title="了解Web及网络基础"></a>了解Web及网络基础</h2><h3 id="使用HTTP协议访问Web"><a href="#使用HTTP协议访问Web" class="headerlink" title="使用HTTP协议访问Web"></a>使用HTTP协议访问Web</h3><p>在浏览器地址栏输入url，<code>Web浏览器</code>从<code>Web服务器</code>端获取文件资源等信息，从而显示在Web页面。在这个过程中，Web使用一种名为<code>HTTP协议</code>作为规范，完成从客户端到服务端的一系列流程。</p>
 <blockquote>
 <p>在访问Web的过程中，像浏览器这样通过发送请求获取服务器资源的<code>东西</code>都可称为客户端(client)，而服务器提供服务的一方称为服务端(server)，但是在现在这个时代，客户端和服务端的角色一直在互换</p>
