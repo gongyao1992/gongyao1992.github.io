@@ -90,7 +90,11 @@
 <meta property="og:image" content="http://yoursite.com/2018/10/16/图解HTTP/通信传输流.jpeg">
 <meta property="og:image" content="http://yoursite.com/2018/10/16/图解HTTP/通信传输流2.jpeg">
 <meta property="og:image" content="http://yoursite.com/2018/10/16/图解HTTP/IP协议网络传输.jpeg">
-<meta property="og:updated_time" content="2018-10-16T17:02:38.372Z">
+<meta property="og:image" content="http://yoursite.com/2018/10/16/图解HTTP/TCP三次握手.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/10/16/图解HTTP/DNS服务.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/10/16/图解HTTP/协议之间相互配合.jpeg">
+<meta property="og:image" content="http://yoursite.com/2018/10/16/图解HTTP/绝对URI格式.jpeg%20(774%20*%20150">
+<meta property="og:updated_time" content="2018-10-16T17:45:20.380Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="图解HTTP">
 <meta name="twitter:description" content="前言在开发的过程中，常常用到HTTP请求。很少去全面的了解它，今天读了《图解HTTP》这本书，简单就着目录梳理一下 了解Web及网络基础使用HTTP协议访问Web在浏览器地址栏输入url，Web浏览器从Web服务器端获取文件资源等信息，从而显示在Web页面。在这个过程中，Web使用一种名为HTTP协议作为规范，完成从客户端到服务端的一系列流程。  在访问Web的过程中，像浏览器这样通过发送请求获取">
@@ -392,8 +396,43 @@
 <h4 id="IP协议"><a href="#IP协议" class="headerlink" title="IP协议"></a>IP协议</h4><p>IP(Internet Protocol)网络协议位于网络层。<code>Internet Protocol</code>这个名字很唬人啊，但事实就是如此，几乎所有的使用网络的系统都在使用IP协议。</p>
 <p><code>IP协议</code>的作用是把各种数据包传送给对方，两个重要条件是<code>IP地址</code>和<code>MAC地址</code>。<code>IP地址</code>可能变动，但是<code>MAC地址</code>基本不变，使用ARP(Address Resolution Protocol)协议凭借MAC地址进行通信。没有人准确的知道通信的过程，只是关注结果，结果就是对方收到的应该收到的。</p>
 <p><img src="/2018/10/16/图解HTTP/IP协议网络传输.jpeg" alt=""></p>
-<h4 id="TCP协议"><a href="#TCP协议" class="headerlink" title="TCP协议"></a>TCP协议</h4><p>TCP协议位于传输层，提供可靠的字节流服务</p>
-<h3 id="负责域名解析的DNS协议"><a href="#负责域名解析的DNS协议" class="headerlink" title="负责域名解析的DNS协议"></a>负责域名解析的DNS协议</h3><h3 id="各种协议与HTTP协议的关系"><a href="#各种协议与HTTP协议的关系" class="headerlink" title="各种协议与HTTP协议的关系"></a>各种协议与HTTP协议的关系</h3><h3 id="URI和URL"><a href="#URI和URL" class="headerlink" title="URI和URL"></a>URI和URL</h3><h2 id="简单的HTTP协议"><a href="#简单的HTTP协议" class="headerlink" title="简单的HTTP协议"></a>简单的HTTP协议</h2>
+<h4 id="TCP协议"><a href="#TCP协议" class="headerlink" title="TCP协议"></a>TCP协议</h4><p><code>TCP协议</code>位于传输层，提供可靠的<code>字节流服务</code>。</p>
+<blockquote>
+<p><strong>字节流服务</strong> ：为了传输方便，将大块的数据分割成<code>报文段</code>为单位的数据包进行管理。</p>
+</blockquote>
+<blockquote>
+<p><strong>可靠的传输</strong> ：能够将数据准确可靠地传给对方</p>
+</blockquote>
+<p><code>TCP协议</code>为了<code>更容易传递</code> <strong>大的数据</strong> 才进行分割，而且TCP协议能够 <strong>确认数据最终能否送达到对方</strong>。</p>
+<p>TCP采用<code>三次握手</code>(three-way handshaking)策略建立连接。用<code>TCP协议</code>把数据包发送出去之后不会置之不理，它一定会向对方确认是否成功送达。<strong>握手过程</strong> 使用了TCP的标志—-SYN(synchronize同步)和ACK(acknowledgement承认)</p>
+<ol>
+<li>发送端发一个带SYN标志的数据包给对方</li>
+<li>接收端收到后，回传一个带有SYN/ACK标志的数据包以示传达确认信息</li>
+<li>发送端再回传一个带ACK标志的数据包。</li>
+</ol>
+<p>握手过程中若某个阶段莫名中断，TCP协议会再次以相同的顺序发送相同的数据包</p>
+<p><img src="/2018/10/16/图解HTTP/TCP三次握手.jpeg" alt=""></p>
+<h3 id="负责域名解析的DNS协议"><a href="#负责域名解析的DNS协议" class="headerlink" title="负责域名解析的DNS协议"></a>负责域名解析的DNS协议</h3><p><code>DNS(Domain Name System 域名系统)服务</code>是和<code>HTTP协议</code>一样位于应用层的协议。提供<code>域名</code>和<code>IP地址</code>的解析</p>
+<p><img src="/2018/10/16/图解HTTP/DNS服务.jpeg" alt=""></p>
+<h3 id="各种协议与HTTP协议的关系"><a href="#各种协议与HTTP协议的关系" class="headerlink" title="各种协议与HTTP协议的关系"></a>各种协议与HTTP协议的关系</h3><p><img src="/2018/10/16/图解HTTP/协议之间相互配合.jpeg" alt=""></p>
+<h3 id="URI和URL"><a href="#URI和URL" class="headerlink" title="URI和URL"></a>URI和URL</h3><p><code>URI</code>是统一资源标识符</p>
+<h4 id="统一资源标识符"><a href="#统一资源标识符" class="headerlink" title="统一资源标识符"></a>统一资源标识符</h4><p>URI(Uniform Resource Identifier 统一 资源 识别码)</p>
+<p><strong>Uniform</strong> 统一</p>
+<blockquote>
+<p>规定统一的格式可方便处理不同类型的资源，URI 和 Unicode的设计用意是一致的，将差异的东西统一化，提升处理效率</p>
+</blockquote>
+<p><strong>Resource</strong> 资源</p>
+<blockquote>
+<p>可是别的任意东西</p>
+</blockquote>
+<p><strong>Identifier</strong> 识别码</p>
+<blockquote>
+<p>可是别的对象</p>
+</blockquote>
+<p><code>URI</code>就是由<code>某个协议方案</code>表示的<code>资源</code>的<code>定位标识符</code>。<code>URI</code>用字符串标识某一互联网资源，<code>URL</code>标识资源的地点(互联网上所处的位置)。可见 <code>URL</code>是<code>URI</code>的子集<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ftp://ftp.is.co.za/rfc/rfc1808.txt￼     </span><br><span class="line">http://www.ietf.org/rfc/rfc2396.txt￼     </span><br><span class="line">ldap://[2001:db8::7]/c=GB?objectClass?one￼     </span><br><span class="line">mailto:John.Doe@example.com￼     </span><br><span class="line">news:comp.infosystems.www.servers.unix￼     </span><br><span class="line">tel:+1-816-555-1212￼     </span><br><span class="line">telnet://192.0.2.16:80/￼     </span><br><span class="line">urn:oasis:names:specification:docbook:dtd:xml:4.1.2</span><br></pre></td></tr></table></figure></p>
+<h4 id="URI格式"><a href="#URI格式" class="headerlink" title="URI格式"></a>URI格式</h4><p>绝对URI格式</p>
+<p><img src="/2018/10/16/图解HTTP/绝对URI格式.jpeg (774 * 150" alt=""> )</p>
+<h2 id="简单的HTTP协议"><a href="#简单的HTTP协议" class="headerlink" title="简单的HTTP协议"></a>简单的HTTP协议</h2>
       
     </div>
     
@@ -583,7 +622,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#了解Web及网络基础"><span class="nav-number">2.</span> <span class="nav-text">了解Web及网络基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用HTTP协议访问Web"><span class="nav-number">2.1.</span> <span class="nav-text">使用HTTP协议访问Web</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP的诞生"><span class="nav-number">2.2.</span> <span class="nav-text">HTTP的诞生</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网络基础TCP-IP"><span class="nav-number">2.3.</span> <span class="nav-text">网络基础TCP/IP</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP-IP协议族"><span class="nav-number">2.3.1.</span> <span class="nav-text">TCP/IP协议族</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP-IP的分层管理"><span class="nav-number">2.3.2.</span> <span class="nav-text">TCP/IP的分层管理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#应用层"><span class="nav-number">2.3.2.1.</span> <span class="nav-text">应用层</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#传输层"><span class="nav-number">2.3.2.2.</span> <span class="nav-text">传输层</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#网络层"><span class="nav-number">2.3.2.3.</span> <span class="nav-text">网络层</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#数据链路层"><span class="nav-number">2.3.2.4.</span> <span class="nav-text">数据链路层</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP-IP通信传输流"><span class="nav-number">2.3.3.</span> <span class="nav-text">TCP/IP通信传输流</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#与HTTP关系密切的协议：IP、TCP和DNS"><span class="nav-number">2.4.</span> <span class="nav-text">与HTTP关系密切的协议：IP、TCP和DNS</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#IP协议"><span class="nav-number">2.4.1.</span> <span class="nav-text">IP协议</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP协议"><span class="nav-number">2.4.2.</span> <span class="nav-text">TCP协议</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#负责域名解析的DNS协议"><span class="nav-number">2.5.</span> <span class="nav-text">负责域名解析的DNS协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#各种协议与HTTP协议的关系"><span class="nav-number">2.6.</span> <span class="nav-text">各种协议与HTTP协议的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#URI和URL"><span class="nav-number">2.7.</span> <span class="nav-text">URI和URL</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单的HTTP协议"><span class="nav-number">3.</span> <span class="nav-text">简单的HTTP协议</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#了解Web及网络基础"><span class="nav-number">2.</span> <span class="nav-text">了解Web及网络基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用HTTP协议访问Web"><span class="nav-number">2.1.</span> <span class="nav-text">使用HTTP协议访问Web</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP的诞生"><span class="nav-number">2.2.</span> <span class="nav-text">HTTP的诞生</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网络基础TCP-IP"><span class="nav-number">2.3.</span> <span class="nav-text">网络基础TCP/IP</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP-IP协议族"><span class="nav-number">2.3.1.</span> <span class="nav-text">TCP/IP协议族</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP-IP的分层管理"><span class="nav-number">2.3.2.</span> <span class="nav-text">TCP/IP的分层管理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#应用层"><span class="nav-number">2.3.2.1.</span> <span class="nav-text">应用层</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#传输层"><span class="nav-number">2.3.2.2.</span> <span class="nav-text">传输层</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#网络层"><span class="nav-number">2.3.2.3.</span> <span class="nav-text">网络层</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#数据链路层"><span class="nav-number">2.3.2.4.</span> <span class="nav-text">数据链路层</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP-IP通信传输流"><span class="nav-number">2.3.3.</span> <span class="nav-text">TCP/IP通信传输流</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#与HTTP关系密切的协议：IP、TCP和DNS"><span class="nav-number">2.4.</span> <span class="nav-text">与HTTP关系密切的协议：IP、TCP和DNS</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#IP协议"><span class="nav-number">2.4.1.</span> <span class="nav-text">IP协议</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TCP协议"><span class="nav-number">2.4.2.</span> <span class="nav-text">TCP协议</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#负责域名解析的DNS协议"><span class="nav-number">2.5.</span> <span class="nav-text">负责域名解析的DNS协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#各种协议与HTTP协议的关系"><span class="nav-number">2.6.</span> <span class="nav-text">各种协议与HTTP协议的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#URI和URL"><span class="nav-number">2.7.</span> <span class="nav-text">URI和URL</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#统一资源标识符"><span class="nav-number">2.7.1.</span> <span class="nav-text">统一资源标识符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#URI格式"><span class="nav-number">2.7.2.</span> <span class="nav-text">URI格式</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简单的HTTP协议"><span class="nav-number">3.</span> <span class="nav-text">简单的HTTP协议</span></a></li></ol></div>
             
 
           </div>
