@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="book," />
+  <meta name="keywords" content="MySql," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="《图解TCP IP》1作者用通俗易懂的文字以及图介绍了TCP IP协议 More info：viki 《GoWeb编程》More info: go笔记 《Go语言实战》《》">
-<meta name="keywords" content="book">
+<meta name="description" content="前言今天在做leetcode题库里面数据库题目的时候，发现有的题目需要的列并不是Table里面有的列。这时候需要我们新建临时列，有的需要递增，有的需要有条件的递增。下面看一下两个leetcode的问题🌰 分数排名问题描述链接 解题思路部门工资前三高的员工问题描述链接 解题思路创建变量是否生成笛卡尔积？ 执行效率？ 变量的赋值？哪里赋值，顺序是什么？显示是什么？ 什么情况下会用到？目前是产生序号">
+<meta name="keywords" content="MySql">
 <meta property="og:type" content="article">
-<meta property="og:title" content="reading">
-<meta property="og:url" content="http://yoursite.com/2018/09/30/reading/index.html">
+<meta property="og:title" content="MySql语句创建变量辅助查询">
+<meta property="og:url" content="http://yoursite.com/2018/10/24/MySql语句创建变量辅助查询/index.html">
 <meta property="og:site_name" content="Ordinary Road">
-<meta property="og:description" content="《图解TCP IP》1作者用通俗易懂的文字以及图介绍了TCP IP协议 More info：viki 《GoWeb编程》More info: go笔记 《Go语言实战》《》">
+<meta property="og:description" content="前言今天在做leetcode题库里面数据库题目的时候，发现有的题目需要的列并不是Table里面有的列。这时候需要我们新建临时列，有的需要递增，有的需要有条件的递增。下面看一下两个leetcode的问题🌰 分数排名问题描述链接 解题思路部门工资前三高的员工问题描述链接 解题思路创建变量是否生成笛卡尔积？ 执行效率？ 变量的赋值？哪里赋值，顺序是什么？显示是什么？ 什么情况下会用到？目前是产生序号">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-16T10:47:27.074Z">
+<meta property="og:updated_time" content="2018-10-24T10:53:39.303Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="reading">
-<meta name="twitter:description" content="《图解TCP IP》1作者用通俗易懂的文字以及图介绍了TCP IP协议 More info：viki 《GoWeb编程》More info: go笔记 《Go语言实战》《》">
+<meta name="twitter:title" content="MySql语句创建变量辅助查询">
+<meta name="twitter:description" content="前言今天在做leetcode题库里面数据库题目的时候，发现有的题目需要的列并不是Table里面有的列。这时候需要我们新建临时列，有的需要递增，有的需要有条件的递增。下面看一下两个leetcode的问题🌰 分数排名问题描述链接 解题思路部门工资前三高的员工问题描述链接 解题思路创建变量是否生成笛卡尔积？ 执行效率？ 变量的赋值？哪里赋值，顺序是什么？显示是什么？ 什么情况下会用到？目前是产生序号">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/09/30/reading/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/10/24/MySql语句创建变量辅助查询/"/>
 
 
 
 
 
-  <title>reading | Ordinary Road</title>
+  <title>MySql语句创建变量辅助查询 | Ordinary Road</title>
   
 
 
@@ -253,7 +253,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/30/reading/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/24/MySql语句创建变量辅助查询/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="GongYao">
@@ -270,7 +270,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">reading</h1>
+          <h1 class="post-title" itemprop="name headline">MySql语句创建变量辅助查询</h1>
         
 
         <div class="post-meta">
@@ -282,8 +282,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-30T11:14:49+08:00">
-                2018-09-30
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-24T18:37:46+08:00">
+                2018-10-24
               </time>
             
 
@@ -305,8 +305,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Reading/" itemprop="url" rel="index">
-                    <span itemprop="name">Reading</span>
+                  <a href="/categories/数据集/" itemprop="url" rel="index">
+                    <span itemprop="name">数据集</span>
                   </a>
                 </span>
 
@@ -342,10 +342,14 @@
       
 
       
-        <h3 id="《图解TCP-IP》"><a href="#《图解TCP-IP》" class="headerlink" title="《图解TCP IP》"></a>《图解TCP IP》</h3><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">作者用通俗易懂的文字以及图介绍了TCP IP协议</span><br></pre></td></tr></table></figure>
-<p>More info：<a href="https://github.com/gongyao1992/mygo2/wiki" target="_blank" rel="noopener">viki</a></p>
-<h3 id="《GoWeb编程》"><a href="#《GoWeb编程》" class="headerlink" title="《GoWeb编程》"></a>《GoWeb编程》</h3><p>More info: <a href="https://gongyao1992.github.io/go/" target="_blank" rel="noopener">go笔记</a></p>
-<h3 id="《Go语言实战》"><a href="#《Go语言实战》" class="headerlink" title="《Go语言实战》"></a>《Go语言实战》</h3><h3 id="《》"><a href="#《》" class="headerlink" title="《》"></a>《》</h3>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>今天在做<code>leetcode</code>题库里面数据库题目的时候，发现有的题目需要的<strong>列</strong>并不是<code>Table</code>里面有的<strong>列</strong>。这时候需要我们新建<strong>临时列</strong>，有的需要递增，有的需要有条件的递增。下面看一下两个<code>leetcode</code>的问题🌰</p>
+<h2 id="分数排名"><a href="#分数排名" class="headerlink" title="分数排名"></a>分数排名</h2><h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p><a href="https://leetcode-cn.com/problems/rank-scores/" target="_blank" rel="noopener">链接</a></p>
+<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><h2 id="部门工资前三高的员工"><a href="#部门工资前三高的员工" class="headerlink" title="部门工资前三高的员工"></a>部门工资前三高的员工</h2><h3 id="问题描述-1"><a href="#问题描述-1" class="headerlink" title="问题描述"></a>问题描述</h3><p><a href="https://leetcode-cn.com/problems/department-top-three-salaries/" target="_blank" rel="noopener">链接</a></p>
+<h3 id="解题思路-1"><a href="#解题思路-1" class="headerlink" title="解题思路"></a>解题思路</h3><h2 id="创建变量"><a href="#创建变量" class="headerlink" title="创建变量"></a>创建变量</h2><pre><code>是否生成笛卡尔积？
+执行效率？
+变量的赋值？哪里赋值，顺序是什么？显示是什么？
+什么情况下会用到？目前是产生序号
+</code></pre>
       
     </div>
     
@@ -362,7 +366,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/book/" rel="tag"># book</a>
+            <a href="/tags/MySql/" rel="tag"># MySql</a>
           
         </div>
       
@@ -375,15 +379,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2018/10/24/Redis-RDB持久化/" rel="next" title="Redis RDB持久化">
+                <i class="fa fa-chevron-left"></i> Redis RDB持久化
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/10/11/Go生产者消费者并发模型/" rel="prev" title="Go生产者消费者并发模型">
-                Go生产者消费者并发模型 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -535,7 +539,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#《图解TCP-IP》"><span class="nav-number">1.</span> <span class="nav-text">《图解TCP IP》</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#《GoWeb编程》"><span class="nav-number">2.</span> <span class="nav-text">《GoWeb编程》</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#《Go语言实战》"><span class="nav-number">3.</span> <span class="nav-text">《Go语言实战》</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#《》"><span class="nav-number">4.</span> <span class="nav-text">《》</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分数排名"><span class="nav-number">2.</span> <span class="nav-text">分数排名</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#问题描述"><span class="nav-number">2.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解题思路"><span class="nav-number">2.2.</span> <span class="nav-text">解题思路</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部门工资前三高的员工"><span class="nav-number">3.</span> <span class="nav-text">部门工资前三高的员工</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#问题描述-1"><span class="nav-number">3.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解题思路-1"><span class="nav-number">3.2.</span> <span class="nav-text">解题思路</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建变量"><span class="nav-number">4.</span> <span class="nav-text">创建变量</span></a></li></ol></div>
             
 
           </div>
