@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="go," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言开发过程中，对数组、切片、映射以进行遍历的时候，经常用到for range。但是你真正了解它吗？下面我们对for range一探究竟 for range思考的角度下面的例子是我们通常的用法。我们需要思考两个方面  value的值到底是来自于哪里？ 在value被赋值的过程中，需要消耗内存。这样使用在性能上是不是最优的？(下期再讲)  1234for key, value := range ar">
+<meta name="keywords" content="go">
+<meta property="og:type" content="article">
+<meta property="og:title" content="for range的秘密">
+<meta property="og:url" content="https://gongyao1992.github.io/2018/11/05/for-range的秘密/index.html">
+<meta property="og:site_name" content="Ordinary Road">
+<meta property="og:description" content="前言开发过程中，对数组、切片、映射以进行遍历的时候，经常用到for range。但是你真正了解它吗？下面我们对for range一探究竟 for range思考的角度下面的例子是我们通常的用法。我们需要思考两个方面  value的值到底是来自于哪里？ 在value被赋值的过程中，需要消耗内存。这样使用在性能上是不是最优的？(下期再讲)  1234for key, value := range ar">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-11-05T16:22:30.870Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="for range的秘密">
+<meta name="twitter:description" content="前言开发过程中，对数组、切片、映射以进行遍历的时候，经常用到for range。但是你真正了解它吗？下面我们对for range一探究竟 for range思考的角度下面的例子是我们通常的用法。我们需要思考两个方面  value的值到底是来自于哪里？ 在value被赋值的过程中，需要消耗内存。这样使用在性能上是不是最优的？(下期再讲)  1234for key, value := range ar">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://gongyao1992.github.io/2018/11/05/for-range的秘密/"/>
+
+
+
+
+
+  <title>for range的秘密 | Ordinary Road</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ordinary Road</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">平凡之路</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://gongyao1992.github.io/2018/11/05/for-range的秘密/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="GongYao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/touxiang.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ordinary Road">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">for range的秘密</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-05T10:39:10+08:00">
+                2018-11-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/开发语言/" itemprop="url" rel="index">
+                    <span itemprop="name">开发语言</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>开发过程中，对数组、切片、映射以进行遍历的时候，经常用到<code>for range</code>。但是你真正了解它吗？下面我们对<code>for range</code>一探究竟</p>
+<h2 id="for-range思考的角度"><a href="#for-range思考的角度" class="headerlink" title="for range思考的角度"></a>for range思考的角度</h2><p>下面的例子是我们通常的用法。我们需要思考两个方面</p>
+<ol>
+<li>value的值到底是来自于哪里？</li>
+<li>在value被赋值的过程中，需要消耗内存。这样使用在性能上是不是最优的？(下期再讲)</li>
+</ol>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> key, value := <span class="keyword">range</span> arr &#123;</span><br><span class="line">    <span class="comment">// key</span></span><br><span class="line">    <span class="comment">// value</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="arr的副本"><a href="#arr的副本" class="headerlink" title="arr的副本"></a>arr的副本</h3><p>我们先从下面的代码看一下<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">rangeArr</span><span class="params">()</span></span>  &#123;</span><br><span class="line">    a := [<span class="number">5</span>]<span class="keyword">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;</span><br><span class="line">    <span class="keyword">var</span> r [<span class="number">5</span>]<span class="keyword">int</span></span><br><span class="line"></span><br><span class="line">    fmt.Println(<span class="string">"rangeArr a. "</span>, a)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> k, v := <span class="keyword">range</span> a &#123; <span class="comment">//a is a copy</span></span><br><span class="line">        <span class="keyword">if</span> k == <span class="number">0</span> &#123;</span><br><span class="line">            a[<span class="number">1</span>] = <span class="number">12</span></span><br><span class="line">            a[<span class="number">2</span>] = <span class="number">13</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        r[k] = v <span class="comment">//如果为 r[k] = a[k] 则 r和a一样</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    fmt.Println(<span class="string">"rangeArr a. "</span>, a)</span><br><span class="line">    fmt.Println(<span class="string">"rangeArr r. "</span>, r)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 输出结果</span></span><br><span class="line">rangeArr a.  [<span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span> <span class="number">5</span>]</span><br><span class="line">rangeArr a.  [<span class="number">1</span> <span class="number">12</span> <span class="number">13</span> <span class="number">4</span> <span class="number">5</span>]</span><br><span class="line">rangeArr r.  [<span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span> <span class="number">5</span>]</span><br></pre></td></tr></table></figure></p>
+<p>上面的代码我们有个疑问，为什么 r 的结果是<code>[1 2 3 4 5]</code>而不是和 a 一样的<code>[1 12 13 4 5]</code>，这里主要的原因是<code>for range</code>的数组（切片、映射、信道）是原数据的copy，并不是原数据本身。所以上面<code>for range</code>参与运算的是a的拷贝</p>
+<h2 id="对数组array的range"><a href="#对数组array的range" class="headerlink" title="对数组array的range"></a>对数组array的range</h2><p>对数组array进行遍历的时候可以用<code>for range</code><br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">rangeArr</span><span class="params">()</span></span>  &#123;</span><br><span class="line">    a := [<span class="number">5</span>]<span class="keyword">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;</span><br><span class="line">    <span class="keyword">var</span> r [<span class="number">5</span>]<span class="keyword">int</span></span><br><span class="line">    <span class="keyword">for</span> key, value := <span class="keyword">range</span> a &#123; <span class="comment">//是a的拷贝</span></span><br><span class="line">        <span class="keyword">if</span> key == <span class="number">0</span> &#123;</span><br><span class="line">            a[<span class="number">1</span>] = <span class="number">12</span></span><br><span class="line">            a[<span class="number">2</span>] = <span class="number">13</span></span><br><span class="line">        &#125;</span><br><span class="line">		</span><br><span class="line">        r[key] = value</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    fmt.Println(r)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#输出结果</span><br><span class="line">[<span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span> <span class="number">5</span>]</span><br></pre></td></tr></table></figure></p>
+<h2 id="对切片slice的range"><a href="#对切片slice的range" class="headerlink" title="对切片slice的range"></a>对切片slice的range</h2><p>对切片的遍历<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">rangeSlice</span><span class="params">()</span></span>  &#123;</span><br><span class="line">    a := []<span class="keyword">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;</span><br><span class="line">    <span class="keyword">var</span> r [<span class="number">5</span>]<span class="keyword">int</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> k, v := <span class="keyword">range</span> a &#123; <span class="comment">// 这里也是副本，但是 由于slice的结构不同</span></span><br><span class="line">        <span class="keyword">if</span> k == <span class="number">0</span> &#123;</span><br><span class="line">            a[<span class="number">1</span>] = <span class="number">12</span></span><br><span class="line">            a[<span class="number">2</span>] = <span class="number">13</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        r[k] = v</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    fmt.Println(r)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#输出结果</span><br><span class="line">[<span class="number">1</span> <span class="number">12</span> <span class="number">13</span> <span class="number">4</span> <span class="number">5</span>]</span><br></pre></td></tr></table></figure></p>
+<p>这里需要注意一下。切片和数组的不同，go的切片数据结构如下<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//切片的数据结构</span></span><br><span class="line"><span class="keyword">type</span> slice <span class="keyword">struct</span> &#123;</span><br><span class="line">    array unsafe.Pointer</span><br><span class="line">    <span class="built_in">len</span>   <span class="keyword">int</span></span><br><span class="line">    <span class="built_in">cap</span>   <span class="keyword">int</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>for range</code>里面是对<code>切片头</code>的拷贝，所以修改指针指向的数据就会影响最后r的结果</p>
+<h2 id="对映射map的range"><a href="#对映射map的range" class="headerlink" title="对映射map的range"></a>对映射map的range</h2><p>map的<code>for range</code>主要特征是<code>无序的</code><br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">rangeMap</span><span class="params">()</span></span>  &#123;</span><br><span class="line">    m := <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">interface</span>&#123;&#125; &#123;</span><br><span class="line">        <span class="string">"name"</span>:<span class="string">"wangliang"</span>,</span><br><span class="line">        <span class="string">"age"</span>:<span class="number">26</span>,</span><br><span class="line">        <span class="string">"home"</span>:<span class="string">"shanxi"</span>,</span><br><span class="line">        <span class="string">"town"</span>:<span class="string">"taiyuan"</span>,</span><br><span class="line">    &#125;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">//counter := 0</span></span><br><span class="line">    <span class="keyword">for</span> k, v := <span class="keyword">range</span> m&#123; <span class="comment">//map 是无序的 map也是传的指针</span></span><br><span class="line">        fmt.Println(k, <span class="string">" "</span>, v)</span><br><span class="line">        <span class="comment">//if counter == 0 &#123;</span></span><br><span class="line">        <span class="comment">//	delete(m, "age") //因为map是无序的，所以删除了 可能输出也可能不输出</span></span><br><span class="line">        <span class="comment">//&#125;</span></span><br><span class="line">        <span class="comment">//counter ++</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#输出结果<span class="number">1</span></span><br><span class="line">age   <span class="number">26</span></span><br><span class="line">home   shanxi</span><br><span class="line">town   taiyuan</span><br><span class="line">name   wangliang</span><br><span class="line"></span><br><span class="line">#输出结果<span class="number">2</span></span><br><span class="line">home   shanxi</span><br><span class="line">town   taiyuan</span><br><span class="line">name   wangliang</span><br><span class="line">age   <span class="number">26</span></span><br></pre></td></tr></table></figure></p>
+<p>因为 map 的<code>for range</code>是无序的，所以在遍历的过程中，对map进行删除以及增加，输出是不确定的<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">rangeMap</span><span class="params">()</span></span>  &#123;</span><br><span class="line">    m := <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">interface</span>&#123;&#125; &#123;</span><br><span class="line">        <span class="string">"name"</span>:<span class="string">"wangliang"</span>,</span><br><span class="line">        <span class="string">"age"</span>:<span class="number">26</span>,</span><br><span class="line">        <span class="string">"home"</span>:<span class="string">"shanxi"</span>,</span><br><span class="line">        <span class="string">"town"</span>:<span class="string">"taiyuan"</span>,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    counter := <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> k, v := <span class="keyword">range</span> m&#123; <span class="comment">//map 是无序的 map也是传的指针</span></span><br><span class="line">        fmt.Println(k, <span class="string">" "</span>, v)</span><br><span class="line">        <span class="keyword">if</span> counter == <span class="number">0</span> &#123;</span><br><span class="line">            <span class="built_in">delete</span>(m, <span class="string">"age"</span>) <span class="comment">//因为map是无序的，所以删除了 可能输出也可能不输出</span></span><br><span class="line">        &#125;</span><br><span class="line">		</span><br><span class="line">        <span class="keyword">if</span> counter == <span class="number">1</span> &#123;</span><br><span class="line">            m[<span class="string">"controy"</span>] = <span class="string">"china"</span> <span class="comment">//同理，可能输出可能不输出</span></span><br><span class="line">        &#125;</span><br><span class="line">        counter ++</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    GongYao
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://gongyao1992.github.io/2018/11/05/for-range的秘密/" title="for range的秘密">https://gongyao1992.github.io/2018/11/05/for-range的秘密/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/go/" rel="tag"><i class="fa fa-tag"></i> go</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/27/redigo连接池源码/" rel="next" title="redigo连接池源码">
+                <i class="fa fa-chevron-left"></i> redigo连接池源码
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/touxiang.JPG"
+                alt="GongYao" />
+            
+              <p class="site-author-name" itemprop="name">GongYao</p>
+              <p class="site-description motion-element" itemprop="description">路是自己走的...</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/gongyao1992" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:gongyao1992@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#for-range思考的角度"><span class="nav-number">2.</span> <span class="nav-text">for range思考的角度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#arr的副本"><span class="nav-number">2.1.</span> <span class="nav-text">arr的副本</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对数组array的range"><span class="nav-number">3.</span> <span class="nav-text">对数组array的range</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对切片slice的range"><span class="nav-number">4.</span> <span class="nav-text">对切片slice的range</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对映射map的range"><span class="nav-number">5.</span> <span class="nav-text">对映射map的range</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">GongYao</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
