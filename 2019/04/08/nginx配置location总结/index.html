@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Nginx," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Nginx location配置实例匹配主机下的所有路由123456location / &amp;#123;    # http://127.0.0.1:8080    # http://127.0.0.1:8080/...    # return 502 &apos;&amp;#123;&quot;status&quot;:502,&quot;msg&quot;:permanent&amp;#125;&apos;;    [ configuration A]&amp;#125; 路由">
+<meta name="keywords" content="Nginx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nginx配置location总结">
+<meta property="og:url" content="https://gongyao1992.github.io/2019/04/08/nginx配置location总结/index.html">
+<meta property="og:site_name" content="Ordinary Road">
+<meta property="og:description" content="Nginx location配置实例匹配主机下的所有路由123456location / &amp;#123;    # http://127.0.0.1:8080    # http://127.0.0.1:8080/...    # return 502 &apos;&amp;#123;&quot;status&quot;:502,&quot;msg&quot;:permanent&amp;#125;&apos;;    [ configuration A]&amp;#125; 路由">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-04-08T07:30:12.371Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="nginx配置location总结">
+<meta name="twitter:description" content="Nginx location配置实例匹配主机下的所有路由123456location / &amp;#123;    # http://127.0.0.1:8080    # http://127.0.0.1:8080/...    # return 502 &apos;&amp;#123;&quot;status&quot;:502,&quot;msg&quot;:permanent&amp;#125;&apos;;    [ configuration A]&amp;#125; 路由">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://gongyao1992.github.io/2019/04/08/nginx配置location总结/"/>
+
+
+
+
+
+  <title>nginx配置location总结 | Ordinary Road</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ordinary Road</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">平凡之路</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://gongyao1992.github.io/2019/04/08/nginx配置location总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="GongYao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/touxiang.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ordinary Road">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">nginx配置location总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-08T10:52:09+08:00">
+                2019-04-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/运维/" itemprop="url" rel="index">
+                    <span itemprop="name">运维</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Nginx-location配置实例"><a href="#Nginx-location配置实例" class="headerlink" title="Nginx location配置实例"></a>Nginx location配置实例</h2><h3 id="匹配主机下的所有路由"><a href="#匹配主机下的所有路由" class="headerlink" title="匹配主机下的所有路由"></a>匹配主机下的所有路由</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">location / &#123;</span><br><span class="line">    # http://127.0.0.1:8080</span><br><span class="line">    # http://127.0.0.1:8080/...</span><br><span class="line">    # return 502 '&#123;"status":502,"msg":permanent&#125;';</span><br><span class="line">    [ configuration A]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="路由开头相同"><a href="#路由开头相同" class="headerlink" title="路由开头相同"></a>路由开头相同</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">location /go &#123;</span><br><span class="line">    # 路由开头相同</span><br><span class="line">    # http://127.0.0.1:8080/go</span><br><span class="line">    # http://127.0.0.1:8080/go1 或 http://127.0.0.1:8080/goa</span><br><span class="line">    # http://127.0.0.1:8080/go/...</span><br><span class="line">    return 502 '&#123;"status":502,"msg":$1 permanent&#125;';</span><br><span class="line">    [ configuration B]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">location /go/ &#123;</span><br><span class="line">    # 匹配任何以 /go/ 开头的地址，匹配符合以后，还要继续往下搜索</span><br><span class="line">    # http://127.0.0.1:8080/go</span><br><span class="line">    # http://127.0.0.1:8080/go/...</span><br><span class="line">    return 502 '&#123;"status":502,"msg":$1 permanent&#125;';</span><br><span class="line">    [ configuration C]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">location = /go/ &#123;</span><br><span class="line">    # 固定路由</span><br><span class="line">    # http://127.0.0.1:8080/go</span><br><span class="line">    return 502 '&#123;"status":502,"msg":$1 permanent&#125;';</span><br><span class="line">    [ configuration D]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="正则判断"><a href="#正则判断" class="headerlink" title="正则判断"></a>正则判断</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 3.1.1</span><br><span class="line">location /gyao/go &#123;</span><br><span class="line">    # 匹配任何以 /gyao/go 开头的地址，匹配符合以后，还要继续往下搜索</span><br><span class="line">    return 502 '&#123;"status":502,"msg":~gongyao/go&#125;';</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#</span> 3.1.2</span><br><span class="line">location ~ /gyao/go &#123;</span><br><span class="line">    # 匹配任何以 /gyao/go 开头的地址，匹配符合以后，还要继续往下搜索</span><br><span class="line">    return 502 '&#123;"status":502,"msg":~gongyao/go&#125;';</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#</span> 3.1.1 和 3.1.2 有什么区别呢？？？感觉是匹配顺序不同</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># 例子</span><br><span class="line">location ^~ /images/ &#123;</span><br><span class="line"><span class="meta">  #</span> 匹配任何以 /images/ 开头的地址，匹配符合以后，停止往下搜索正则，采用这一条。</span><br><span class="line">  [ configuration D ]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">location ~* \.(gif|jpg|jpeg)$ &#123;</span><br><span class="line"><span class="meta">  #</span> 匹配所有以 gif,jpg或jpeg 结尾的请求</span><br><span class="line"><span class="meta">  #</span> 然而，所有请求 /images/ 下的图片会被 config D 处理，因为 ^~ 到达不了这一条正则</span><br><span class="line">  [ configuration E ]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">location /images/ &#123;</span><br><span class="line"><span class="meta">  #</span> 字符匹配到 /images/，继续往下，会发现 ^~ 存在</span><br><span class="line">  [ configuration F ]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">location /images/abc &#123;</span><br><span class="line"><span class="meta">  #</span> 最长字符匹配到 /images/abc，继续往下，会发现 ^~ 存在</span><br><span class="line"><span class="meta">  #</span> F与G的放置顺序是没有关系的</span><br><span class="line">  [ configuration G ]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">location ~ /images/abc/ &#123;</span><br><span class="line"><span class="meta">  #</span> 只有去掉 config D 才有效：先最长匹配 config G 开头的地址，继续往下搜索，匹配到这一条正则，采用</span><br><span class="line">    [ configuration H ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><ul>
+<li>以 <code>=</code> 开头表示精确匹配</li>
+<li><code>^~</code> 开头表示uri以某个常规字符串开头，不是正则匹配</li>
+<li><code>~</code> 开头表示区分大小写的正则匹配</li>
+<li><code>~*</code> 开头表示不区分大小写的正则匹配</li>
+<li><code>/</code> 通用匹配, 如果没有其它匹配,任何请求都会匹配到</li>
+</ul>
+<h2 id="实际使用建议"><a href="#实际使用建议" class="headerlink" title="实际使用建议"></a>实际使用建议</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>所以实际使用中，个人觉得至少有三个匹配规则定义，如下：</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>直接匹配网站根，通过域名访问网站首页比较频繁，使用这个会加速处理，官网如是说。</span><br><span class="line"><span class="meta">#</span>这里是直接转发给后端应用服务器了，也可以是一个静态首页</span><br><span class="line"><span class="meta">#</span> 第一个必选规则</span><br><span class="line">location = / &#123;</span><br><span class="line">    proxy_pass http://tomcat:8080/index;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#</span> 第二个必选规则是处理静态文件请求，这是nginx作为http服务器的强项</span><br><span class="line"><span class="meta">#</span> 有两种配置模式，目录匹配或后缀匹配,任选其一或搭配使用</span><br><span class="line">location ^~ /static/ &#123;</span><br><span class="line">    root /webroot/static/;</span><br><span class="line">&#125;</span><br><span class="line">location ~* \.(gif|jpg|jpeg|png|css|js|ico)$ &#123;</span><br><span class="line">    root /webroot/res/;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">#</span>第三个规则就是通用规则，用来转发动态请求到后端应用服务器</span><br><span class="line"><span class="meta">#</span>非静态文件请求就默认是动态请求，自己根据实际把握</span><br><span class="line"><span class="meta">#</span>毕竟目前的一些框架的流行，带.php,.jsp后缀的情况很少了</span><br><span class="line">location / &#123;</span><br><span class="line">    proxy_pass http://tomcat:8080/;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Rewrite规则"><a href="#Rewrite规则" class="headerlink" title="Rewrite规则"></a>Rewrite规则</h2><p><code>Rewrite</code>功能就是，使用<code>Nginx</code>提供的全局变量或自己设置的变量，结合正则表达式和标志位实现url重写以及重定向。<code>Rewrite</code>只能放在<code>server{},location{},if{}</code>中，并且只能对域名后边的<strong>除去传递的参数外的字符串</strong>起作用</p>
+<blockquote>
+<p>例如：<a href="http://127.0.0.1:8081/IMAGE/ABcd/1?a=1&amp;b=2" target="_blank" rel="noopener">http://127.0.0.1:8081/IMAGE/ABcd/1?a=1&amp;b=2</a>, 只能对 <code>/IMAGE/ABcd/1</code> 重写。<br>语法：rewrite regex replacement [flag];</p>
+</blockquote>
+<p>如果相对域名或参数字符串起作用，可以使用全局变量匹配，也可以使用proxy_pass反向代理。</p>
+<p>表明<code>rewrite</code>和<code>location</code>功能有点像，都能实现<strong>跳转</strong>，主要区别在于<code>rewrite</code>是在<strong>同一域名</strong>内更改获取资源的路径，而<code>location</code>是对一类路径做<strong>控制访问</strong>或<strong>反向代理</strong>，可以<code>proxy_pass</code>到其他机器。很多情况下rewrite也会写在location里，它们的执行顺序是：</p>
+<ol>
+<li>执行<code>server</code>块的<code>rewrite</code>指令</li>
+<li>执行<code>location</code>匹配</li>
+<li>执行选定的<code>location</code>中的<code>rewrite</code>指令<blockquote>
+<p>如果其中某步URI被重写，则重新循环执行1-3，直到找到真实存在的文件；循环超过10次，则返回500 Internal Server Error错误。</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="flag-标志位"><a href="#flag-标志位" class="headerlink" title="flag 标志位"></a>flag 标志位</h3><ul>
+<li><code>last</code>:相当于Apache的[L]标记，表示完成rewrite</li>
+<li><code>break</code>:停止执行当前虚拟主机的后续rewrite指令集</li>
+<li><code>redirect</code>:返回302临时重定向，地址栏会显示跳转后的地址</li>
+<li><code>permanent</code>:返回301永久重定向，地址栏会显示跳转后的地址</li>
+</ul>
+<p>这里<code>last</code>和<code>break</code>区别有点难以理解：</p>
+<ol>
+<li><code>last</code>一般写在<code>server</code>和<code>if</code>中，而<code>break</code>一般使用在<code>location</code>中</li>
+<li><code>last</code>不终止重写后的url匹配，即新的url会再从server走一遍匹配流程，而<code>break</code>终止重写后的匹配</li>
+<li><code>break</code>和<code>last</code>都能组织继续执行后面的<code>rewrite</code>指令</li>
+</ol>
+<h3 id="if指令与全局变量"><a href="#if指令与全局变量" class="headerlink" title="if指令与全局变量"></a>if指令与全局变量</h3><h4 id="if指令"><a href="#if指令" class="headerlink" title="if指令"></a>if指令</h4><p>语法为<code>if(condition){...}</code>，对给定的条件<code>condition</code>进行判断。如果为真，大括号内的<code>rewrite</code>指令将被执行，<code>if</code>条件<code>(conditon)</code>可以是如下任何内容：</p>
+<ol>
+<li>当表达式只是一个变量时，如果值为空或任何以0开头的字符串都会当做false</li>
+<li>直接比较变量和内容时，使用=或!=</li>
+<li><code>~</code>正则表达式匹配，<code>~*</code>不区分大小写的匹配，<code>!~</code>区分大小写的不匹配</li>
+</ol>
+<p>例如<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">if ($http_user_agent ~ MSIE) &#123;</span><br><span class="line">    rewrite ^(.*)$ /msie/$1 break;</span><br><span class="line">&#125; //如果UA包含"MSIE"，rewrite请求到/msid/目录下</span><br><span class="line"></span><br><span class="line">if ($http_cookie ~* "id=([^;]+)(?:;|$)") &#123;</span><br><span class="line">    set $id $1;</span><br><span class="line"> &#125; //如果cookie匹配正则，设置变量$id等于正则引用部分</span><br><span class="line"></span><br><span class="line">if ($request_method = POST) &#123;</span><br><span class="line">    return 405;</span><br><span class="line">&#125; //如果提交方法为POST，则返回状态405（Method not allowed）。return不能返回301,302</span><br><span class="line"></span><br><span class="line">if ($slow) &#123;</span><br><span class="line">    limit_rate 10k;</span><br><span class="line">&#125; //限速，$slow可以通过 set 指令设置</span><br><span class="line"></span><br><span class="line">if (!-f $request_filename)&#123;</span><br><span class="line">    break;</span><br><span class="line">    proxy_pass  http://127.0.0.1;</span><br><span class="line">&#125; //如果请求的文件名不存在，则反向代理到localhost 。这里的break也是停止rewrite检查</span><br><span class="line"></span><br><span class="line">if ($args ~ post=140)&#123;</span><br><span class="line">    rewrite ^ http://example.com/ permanent;</span><br><span class="line">&#125; //如果query string中包含"post=140"，永久重定向到example.com</span><br><span class="line"></span><br><span class="line">location ~* \.(gif|jpg|png|swf|flv)$ &#123;</span><br><span class="line">    valid_referers none blocked www.jefflei.com www.leizhenfang.com;</span><br><span class="line">    if ($invalid_referer) &#123;</span><br><span class="line">        return 404;</span><br><span class="line">    &#125; //防盗链</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="全局变量"><a href="#全局变量" class="headerlink" title="全局变量"></a>全局变量</h4><ul>
+<li><code>$args</code> ： #这个变量等于请求行中的参数，同$query_string</li>
+<li><code>$content_length</code> ： 请求头中的Content-length字段。</li>
+<li><code>$content_type</code> ： 请求头中的Content-Type字段。</li>
+<li><code>$document_root</code> ： 当前请求在root指令中指定的值。</li>
+<li><code>$host</code> ： 请求主机头字段，否则为服务器名称。</li>
+<li><code>$http_user_agent</code> ： 客户端agent信息</li>
+<li><code>$http_cookie</code> ： 客户端cookie信息</li>
+<li><code>$limit_rate</code> ： 这个变量可以限制连接速率。</li>
+<li><code>$request_method</code> ： 客户端请求的动作，通常为GET或POST。</li>
+<li><code>$remote_addr</code> ： 客户端的IP地址。</li>
+<li><code>$remote_port</code> ： 客户端的端口。</li>
+<li><code>$remote_user</code> ： 已经经过Auth Basic Module验证的用户名。</li>
+<li><code>$request_filename</code> ： 当前请求的文件路径，由root或alias指令与URI请求生成。</li>
+<li><code>$scheme</code> ： HTTP方法（如http，https）。</li>
+<li><code>$server_protocol</code> ： 请求使用的协议，通常是HTTP/1.0或HTTP/1.1。</li>
+<li><code>$server_addr</code> ： 服务器地址，在完成一次系统调用后可以确定这个值。</li>
+<li><code>$server_name</code> ： 服务器名称。</li>
+<li><code>$server_port</code> ： 请求到达服务器的端口号。</li>
+<li><code>$request_uri</code> ： 包含请求参数的原始URI，不包含主机名，如：”/foo/bar.php?arg=baz”。</li>
+<li><code>$uri</code> ： 不带请求参数的当前URI，$uri不包含主机名，如”/foo/bar.html”。</li>
+<li><code>$document_uri</code> ： 与$uri相同。</li>
+</ul>
+<h3 id="常用正则"><a href="#常用正则" class="headerlink" title="常用正则"></a>常用正则</h3><ul>
+<li><code>.</code> ： 匹配除换行符以外的任意字符</li>
+<li><code>?</code> ： 重复0次或1次</li>
+<li><code>+</code> ： 重复1次或更多次</li>
+<li><code>*</code> ： 重复0次或更多次</li>
+<li><code>\d</code> ：匹配数字</li>
+<li><code>^</code> ： 匹配字符串的开始</li>
+<li><code>$</code> ： 匹配字符串的介绍</li>
+<li><code>{n}</code> ： 重复n次</li>
+<li><code>{n,}</code> ： 重复n次或更多次</li>
+<li><code>[c]</code> ： 匹配单个字符c</li>
+<li><code>[a-z]</code> ： 匹配a-z小写字母的任意一个</li>
+</ul>
+<p>小括号<code>()</code>之间匹配的内容，可以在后面通过<code>$1</code>来引用，<code>$2</code>表示的是前面<code>第二个()</code>里的内容。正则里面容易让人困惑的是 \转义特殊字符。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    GongYao
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://gongyao1992.github.io/2019/04/08/nginx配置location总结/" title="nginx配置location总结">https://gongyao1992.github.io/2019/04/08/nginx配置location总结/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Nginx/" rel="tag"><i class="fa fa-tag"></i> Nginx</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/02/27/装修-不定期更新/" rel="next" title="装修(不定期更新)">
+                <i class="fa fa-chevron-left"></i> 装修(不定期更新)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/touxiang.JPG"
+                alt="GongYao" />
+            
+              <p class="site-author-name" itemprop="name">GongYao</p>
+              <p class="site-description motion-element" itemprop="description">路是自己走的...</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/gongyao1992" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:gongyao1992@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Nginx-location配置实例"><span class="nav-number">1.</span> <span class="nav-text">Nginx location配置实例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#匹配主机下的所有路由"><span class="nav-number">1.1.</span> <span class="nav-text">匹配主机下的所有路由</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#路由开头相同"><span class="nav-number">1.2.</span> <span class="nav-text">路由开头相同</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正则判断"><span class="nav-number">1.3.</span> <span class="nav-text">正则判断</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">1.4.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实际使用建议"><span class="nav-number">2.</span> <span class="nav-text">实际使用建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Rewrite规则"><span class="nav-number">3.</span> <span class="nav-text">Rewrite规则</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#flag-标志位"><span class="nav-number">3.1.</span> <span class="nav-text">flag 标志位</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#if指令与全局变量"><span class="nav-number">3.2.</span> <span class="nav-text">if指令与全局变量</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#if指令"><span class="nav-number">3.2.1.</span> <span class="nav-text">if指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#全局变量"><span class="nav-number">3.2.2.</span> <span class="nav-text">全局变量</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常用正则"><span class="nav-number">3.3.</span> <span class="nav-text">常用正则</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">GongYao</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
