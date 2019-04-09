@@ -79,18 +79,20 @@
 
 
 
-<meta name="description" content="前言 (持续)Redis 运行在内存里面(Redis是内存数据库)，但是假如服务器出现故障宕机，那么内存中的数据就会丢失。这个时候将数据保存在硬盘上就是个很好的选择。 Redis 支持两种持久化方案 rdb持久化，aof持久化，今天着重讨论一下 rdb持久化 rdb持久化 既可以手动执行，也可以根据服务器配置选项定期执行。该功能可以将某个时间点上的数据库状态保存到一个 rdb文件中  SAVE B">
+<meta name="description" content="前言本地使用homebrew安装redis。命令如下1brew install redis 查看redis配置文件使用brew info redis命令，配置文件路径一般我不记 启动redis启动有两种方式  homebrew命令 redis-server命令  homebrew命令前提是必须安装homebrew，且使用homebrew安装了redis1brew services start r">
 <meta name="keywords" content="redis">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Redis RDB持久化">
-<meta property="og:url" content="https://gongyao1992.github.io/2018/10/24/Redis-RDB持久化/index.html">
+<meta property="og:title" content="Redis启动及中止">
+<meta property="og:url" content="https://gongyao1992.github.io/2019/04/09/Redis启动及中止/index.html">
 <meta property="og:site_name" content="Road">
-<meta property="og:description" content="前言 (持续)Redis 运行在内存里面(Redis是内存数据库)，但是假如服务器出现故障宕机，那么内存中的数据就会丢失。这个时候将数据保存在硬盘上就是个很好的选择。 Redis 支持两种持久化方案 rdb持久化，aof持久化，今天着重讨论一下 rdb持久化 rdb持久化 既可以手动执行，也可以根据服务器配置选项定期执行。该功能可以将某个时间点上的数据库状态保存到一个 rdb文件中  SAVE B">
+<meta property="og:description" content="前言本地使用homebrew安装redis。命令如下1brew install redis 查看redis配置文件使用brew info redis命令，配置文件路径一般我不记 启动redis启动有两种方式  homebrew命令 redis-server命令  homebrew命令前提是必须安装homebrew，且使用homebrew安装了redis1brew services start r">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-24T10:28:04.447Z">
+<meta property="og:image" content="https://gongyao1992.github.io/2019/04/09/Redis启动及中止/547597176a433.jpg">
+<meta property="og:updated_time" content="2019-04-09T09:03:05.259Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Redis RDB持久化">
-<meta name="twitter:description" content="前言 (持续)Redis 运行在内存里面(Redis是内存数据库)，但是假如服务器出现故障宕机，那么内存中的数据就会丢失。这个时候将数据保存在硬盘上就是个很好的选择。 Redis 支持两种持久化方案 rdb持久化，aof持久化，今天着重讨论一下 rdb持久化 rdb持久化 既可以手动执行，也可以根据服务器配置选项定期执行。该功能可以将某个时间点上的数据库状态保存到一个 rdb文件中  SAVE B">
+<meta name="twitter:title" content="Redis启动及中止">
+<meta name="twitter:description" content="前言本地使用homebrew安装redis。命令如下1brew install redis 查看redis配置文件使用brew info redis命令，配置文件路径一般我不记 启动redis启动有两种方式  homebrew命令 redis-server命令  homebrew命令前提是必须安装homebrew，且使用homebrew安装了redis1brew services start r">
+<meta name="twitter:image" content="https://gongyao1992.github.io/2019/04/09/Redis启动及中止/547597176a433.jpg">
 
 
 
@@ -120,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="https://gongyao1992.github.io/2018/10/24/Redis-RDB持久化/"/>
+  <link rel="canonical" href="https://gongyao1992.github.io/2019/04/09/Redis启动及中止/"/>
 
 
 
 
 
-  <title>Redis RDB持久化 | Road</title>
+  <title>Redis启动及中止 | Road</title>
   
 
 
@@ -253,7 +255,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://gongyao1992.github.io/2018/10/24/Redis-RDB持久化/">
+    <link itemprop="mainEntityOfPage" href="https://gongyao1992.github.io/2019/04/09/Redis启动及中止/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="GongYao">
@@ -270,7 +272,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Redis RDB持久化</h1>
+          <h1 class="post-title" itemprop="name headline">Redis启动及中止</h1>
         
 
         <div class="post-meta">
@@ -282,8 +284,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-24T00:24:45+08:00">
-                2018-10-24
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-09T16:47:49+08:00">
+                2019-04-09
               </time>
             
 
@@ -342,18 +344,19 @@
       
 
       
-        <h2 id="前言-持续"><a href="#前言-持续" class="headerlink" title="前言 (持续)"></a>前言 (持续)</h2><p>Redis 运行在内存里面(Redis是内存数据库)，但是假如服务器出现故障宕机，那么内存中的数据就会丢失。这个时候将数据保存在硬盘上就是个很好的选择。</p>
-<p>Redis 支持两种持久化方案 <code>rdb持久化</code>，<code>aof持久化</code>，今天着重讨论一下 <code>rdb持久化</code></p>
-<p><strong>rdb持久化</strong> 既可以手动执行，也可以根据服务器配置选项定期执行。该功能可以将某个时间点上的数据库状态保存到一个 <strong>rdb文件中</strong></p>
-<blockquote>
-<p>SAVE BGSAVE 命令</p>
-</blockquote>
-<p><strong>rdb文件</strong> 是一个经过压缩的二进制文件，通过该文件可以还原生成rdb文件时的数据库状态</p>
-<p><strong>rdb文件</strong> 是保存在硬盘里面的，所以redis服务器无论发生什么状况，只要rdb文件还存在，Redis服务器就可以用它来还原数据库状态</p>
-<h2 id="RDB文件的创建和载入"><a href="#RDB文件的创建和载入" class="headerlink" title="RDB文件的创建和载入"></a>RDB文件的创建和载入</h2><h3 id="SAVE-命令"><a href="#SAVE-命令" class="headerlink" title="SAVE 命令"></a>SAVE 命令</h3><p>阻塞Redis服务器进程，直到RDB文件创建完毕为止。在服务器阻塞的过程中，服务器不能处理任何命令请求</p>
-<h3 id="BGSAVE-命令"><a href="#BGSAVE-命令" class="headerlink" title="BGSAVE 命令"></a>BGSAVE 命令</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">+<span class="comment">-------+------------------+------+-----+---------+-------+</span></span><br><span class="line">| Field | Type             | Null | Key | Default | Extra |</span><br><span class="line">+<span class="comment">-------+------------------+------+-----+---------+-------+</span></span><br><span class="line">| Id    | int(11) unsigned | NO   |     | 0       |       |</span><br><span class="line">| Name  | varchar(32)      | NO   |     |         |       |</span><br><span class="line">+<span class="comment">-------+------------------+------+-----+---------+-------+</span></span><br></pre></td></tr></table></figure>
-<p>BGSAVE 会派生出一个子进程，然后由子进程负责创建RDB文件，服务器进程处理任务请求</p>
-
+        <p><img src="/2019/04/09/Redis启动及中止/547597176a433.jpg" alt="奋斗"></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本地使用<code>homebrew</code>安装<code>redis</code>。命令如下<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install redis</span><br></pre></td></tr></table></figure></p>
+<p>查看<code>redis</code>配置文件使用<code>brew info redis</code>命令，配置文件路径一般我不记</p>
+<h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><p><code>redis</code>启动有两种方式</p>
+<ol>
+<li><code>homebrew</code>命令</li>
+<li><code>redis-server</code>命令</li>
+</ol>
+<h3 id="homebrew命令"><a href="#homebrew命令" class="headerlink" title="homebrew命令"></a><code>homebrew</code>命令</h3><p>前提是必须安装<code>homebrew</code>，且使用<code>homebrew</code>安装了<code>redis</code><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew services start redis</span><br></pre></td></tr></table></figure></p>
+<h3 id="redis-server命令"><a href="#redis-server命令" class="headerlink" title="redis-server命令"></a><code>redis-server</code>命令</h3><p>通用方法<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认配置</span></span><br><span class="line">redis-server</span><br><span class="line"><span class="comment"># 特定配置</span></span><br><span class="line">redis-server /usr/<span class="built_in">local</span>/etc/redis.conf</span><br></pre></td></tr></table></figure></p>
+<p>上述命令启动<code>redis</code>，关闭终端，<code>redis</code>关闭。在命令后面添加 <code>&amp;</code>，后台启动</p>
+<h2 id="中止"><a href="#中止" class="headerlink" title="中止"></a>中止</h2><h3 id="homebrew命令-1"><a href="#homebrew命令-1" class="headerlink" title="homebrew命令"></a><code>homebrew</code>命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew services stop redis</span><br></pre></td></tr></table></figure>
+<h3 id="终端命令"><a href="#终端命令" class="headerlink" title="终端命令"></a>终端命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-cli shutdown</span><br></pre></td></tr></table></figure>
       
     </div>
     
@@ -373,7 +376,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://gongyao1992.github.io/2018/10/24/Redis-RDB持久化/" title="Redis RDB持久化">https://gongyao1992.github.io/2018/10/24/Redis-RDB持久化/</a>
+    <a href="https://gongyao1992.github.io/2019/04/09/Redis启动及中止/" title="Redis启动及中止">https://gongyao1992.github.io/2019/04/09/Redis启动及中止/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -401,8 +404,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/10/19/TCP连接的建立与终止/" rel="next" title="TCP连接的建立与终止">
-                <i class="fa fa-chevron-left"></i> TCP连接的建立与终止
+              <a href="/2019/04/08/nginx配置location总结/" rel="next" title="nginx配置location总结">
+                <i class="fa fa-chevron-left"></i> nginx配置location总结
               </a>
             
           </div>
@@ -410,10 +413,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/10/24/MySql语句创建变量辅助查询/" rel="prev" title="MySql语句创建变量辅助查询">
-                MySql语句创建变量辅助查询 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -565,7 +564,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言-持续"><span class="nav-number">1.</span> <span class="nav-text">前言 (持续)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RDB文件的创建和载入"><span class="nav-number">2.</span> <span class="nav-text">RDB文件的创建和载入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SAVE-命令"><span class="nav-number">2.1.</span> <span class="nav-text">SAVE 命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BGSAVE-命令"><span class="nav-number">2.2.</span> <span class="nav-text">BGSAVE 命令</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动"><span class="nav-number">2.</span> <span class="nav-text">启动</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#homebrew命令"><span class="nav-number">2.1.</span> <span class="nav-text">homebrew命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redis-server命令"><span class="nav-number">2.2.</span> <span class="nav-text">redis-server命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#中止"><span class="nav-number">3.</span> <span class="nav-text">中止</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#homebrew命令-1"><span class="nav-number">3.1.</span> <span class="nav-text">homebrew命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#终端命令"><span class="nav-number">3.2.</span> <span class="nav-text">终端命令</span></a></li></ol></li></ol></div>
             
 
           </div>
